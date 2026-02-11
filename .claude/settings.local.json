@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(lsof:*)",
+      "Bash(npm start)",
+      "Bash(node:*)",
+      "Bash(curl:*)"
+    ]
+  }
+}

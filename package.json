@@ -1,17 +1,16 @@
 {
-  "name": "detective-game-server",
+  "name": "detective-archive",
   "version": "1.0.0",
-  "description": "Backend for Detective Mystery Game",
-  "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "build": "cd client && npm install && npm run build",
+    "start": "node server/server.js"
   },
   "dependencies": {
-    "body-parser": "^1.20.2",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.1",
     "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2",
+    "openai": "^4.20.1",
     "json5": "^2.2.3",
-    "openai": "^6.17.0"
+    "dotenv": "^16.3.1"
   }
 }
