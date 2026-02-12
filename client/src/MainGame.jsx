@@ -492,6 +492,17 @@ const MainGame = ({ apiKey, baseUrl, model, onLogout }) => {
             clearInterval(interval);
             setModal({ title: "生成失败", content: e.message, type: 'danger' });
             setLoading(false);
+
+            // Sync points on failure
+            if (!isDev) {
+                fetch(`${SERVER_URL}/user/login`, {
+                    method: 'POST',
+                    headers: { 'x-api-key': apiKey }
+                })
+                .then(res => res.json())
+                .then(data => setPoints(data.points))
+                .catch(console.error);
+            }
         }
     };
 

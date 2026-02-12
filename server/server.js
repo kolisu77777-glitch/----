@@ -238,6 +238,15 @@ ${JSON.stringify(englishJSON)}
 
     } catch (error) {
         console.error('Error:', error);
+
+        // Refund points if generation failed and points were deducted
+        const apiKey = req.headers['x-api-key'];
+        const isDev = apiKey === 'sk-606bfbb79c9640d78aebabb7c5e596cf';
+        if (!isDev) {
+             const refundedPoints = UserStore.updatePoints(apiKey, 10);
+             console.log(`[Refund] Generation failed. Refunded 10 points. Current: ${refundedPoints}`);
+        }
+
         res.status(500).json({ error: error.message || 'Unknown error' });
     }
 });
