@@ -1072,7 +1072,7 @@ const MainGame = ({ apiKey, baseUrl, model, onLogout }) => {
                 <HackingMinigame
                     onSuccess={onHackingSuccess}
                     onFailure={onHackingFailure}
-                    targetName={caseData.clues[hackingTarget.clueIndex].title}
+                    targetName={caseData.clues[hackingTarget.clueIndex]?.title || "未知设备"}
                 />
             )}
 

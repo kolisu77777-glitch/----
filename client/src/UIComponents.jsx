@@ -232,7 +232,7 @@ export const HackingMinigame = ({ onSuccess, onFailure, targetName }) => {
     useEffect(() => {
         // Determine mode based on targetName
         let newMode = 'pin';
-        if (targetName) {
+        if (targetName && typeof targetName === 'string') {
             if (targetName.includes('手机') || targetName.includes('平板') || targetName.includes('主机')) {
                 newMode = 'pattern'; // Fingerprint/Pattern for phones
             } else if (targetName.includes('保险柜') || targetName.includes('U盘') || targetName.includes('密码')) {

@@ -100,7 +100,12 @@ Generate a **complex, high-IQ mystery scenario** based on the theme: "${theme}".
 3. **The Suspects**:
    - 3 suspects.
    - **Hidden Agendas**: Each suspect must have a secret they are hiding (e.g., theft, affair, fraud) that makes them act suspiciously, even if they aren't the killer.
-   - **Names**: Generate names appropriate for the setting/theme. If the theme implies a Chinese setting, use diverse Chinese names (2-4 characters). If the theme implies a Western or other setting, use appropriate foreign names. Avoid generic names.
+   - **Names**: STRICTLY match the names to the cultural setting of the theme.
+     - **Western Setting** (e.g., USA, UK, Europe): Use Western names (e.g., "John Smith", "Emily", "Robert").
+     - **Chinese Setting**: Use diverse Chinese names in Pinyin (e.g., "Chen Yu").
+     - **Japanese Setting**: Use Japanese names (e.g., "Tanaka").
+     - **Other**: Use appropriate local names.
+     - **CRITICAL**: Do NOT use Chinese names for a Western setting.
 
 ### Output Format
 Return a single JSON object containing the scenario.
@@ -188,7 +193,10 @@ Task: Translate the following JSON content into **Simplified Chinese**.
 Rules:
 1. **Keep all JSON keys in English** (e.g., "title", "victim", "suspects"). DO NOT translate keys.
 2. **Translate all string values** to natural, suspenseful Simplified Chinese.
-3. **Names**: Translate names naturally. For Chinese names, ensure they are realistic and diverse (avoiding generic ones). For foreign names, use standard transliteration (e.g., "Sherlock" -> "夏洛克").
+3. **Names**: Handle names based on their origin.
+   - **Western/Foreign Names**: Transliterate them to standard Chinese (e.g., "John" -> "约翰", "Sherlock" -> "夏洛克"). **DO NOT** replace them with Chinese names.
+   - **Chinese Names (Pinyin)**: Convert to realistic Chinese characters (e.g., "Chen Yu" -> "陈宇").
+   - Avoid generic names.
 4. **Structure**: Do NOT change the JSON structure or nesting.
 5. **Searchable Areas**: For the "searchable_areas" array, keep each location name **EXTREMELY SHORT (MAX 6 Chinese characters)**. Remove all adjectives and descriptions. e.g., "Dark and gloomy basement" -> "地下室", "Thermostatic safe house behind retina scanner" -> "恒温安全屋".
 6. **Clues**: If a clue title or content starts with "Red Herring" or "红鲱鱼", REMOVE those words. Just keep the description of the object.
