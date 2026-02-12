@@ -100,7 +100,7 @@ Generate a **complex, high-IQ mystery scenario** based on the theme: "${theme}".
 3. **The Suspects**:
    - 3 suspects.
    - **Hidden Agendas**: Each suspect must have a secret they are hiding (e.g., theft, affair, fraud) that makes them act suspiciously, even if they aren't the killer.
-   - Use Chinese names written in Pinyin (e.g., "Li Ming").
+   - **Names**: Generate names appropriate for the setting/theme. If the theme implies a Chinese setting, use diverse Chinese names (2-4 characters). If the theme implies a Western or other setting, use appropriate foreign names. Avoid generic names.
 
 ### Output Format
 Return a single JSON object containing the scenario.
@@ -188,7 +188,7 @@ Task: Translate the following JSON content into **Simplified Chinese**.
 Rules:
 1. **Keep all JSON keys in English** (e.g., "title", "victim", "suspects"). DO NOT translate keys.
 2. **Translate all string values** to natural, suspenseful Simplified Chinese.
-3. **Names**: Convert Pinyin names to realistic Chinese characters (e.g., "Li Ming" -> "李明").
+3. **Names**: Translate names naturally. For Chinese names, ensure they are realistic and diverse (avoiding generic ones). For foreign names, use standard transliteration (e.g., "Sherlock" -> "夏洛克").
 4. **Structure**: Do NOT change the JSON structure or nesting.
 5. **Searchable Areas**: For the "searchable_areas" array, keep each location name **EXTREMELY SHORT (MAX 6 Chinese characters)**. Remove all adjectives and descriptions. e.g., "Dark and gloomy basement" -> "地下室", "Thermostatic safe house behind retina scanner" -> "恒温安全屋".
 6. **Clues**: If a clue title or content starts with "Red Herring" or "红鲱鱼", REMOVE those words. Just keep the description of the object.
@@ -578,20 +578,25 @@ app.post('/daily-theme', async (req, res) => {
 
         console.log(`正在生成每日挑战... 日期: ${date}, 模型: ${modelName}`);
 
-        const prompt = `Generate a unique mystery game theme based on the historical events of "${date}" (Month/Day).
+        const genres = ["Cyberpunk", "Steampunk", "Wuxia/Ancient China", "Lovecraftian/Cthulhu", "Sci-Fi", "Noir", "Modern Thriller", "Supernatural"];
+        const randomGenre = genres[Math.floor(Math.random() * genres.length)];
+
+        const prompt = `Generate a unique mystery game theme based on the historical events of "${date}" (Month/Day) combined with the "${randomGenre}" genre.
         1. Find a historical event, crime, or strange occurrence that happened on this day in history (any year).
-        2. Create a fictionalized mystery theme inspired by it.
-        3. Output ONLY the theme title in Simplified Chinese.
-        4. CRITICAL: Do NOT include any punctuation, quotes, symbols, or prefixes like "Theme:". Just the Chinese characters.
-        5. **Avoid Repetition**: Ensure the theme is distinct and creative.
-        Example Output: 1888年伦敦白教堂连环杀人案重演`;
+        2. **Prioritize obscure or less common events** over very famous ones.
+        3. **MASHUP**: Re-imagine this event within the **${randomGenre}** setting.
+           - Example (Cyberpunk + 1888): "Neon Jack the Ripper: Cyborg Geisha Murders".
+           - Example (Wuxia + Moon Landing): "Chang'e's Jade Rabbit: The Imperial Palace Theft".
+        4. Output ONLY the theme title in Simplified Chinese.
+        5. CRITICAL: Do NOT include any punctuation, quotes, symbols, or prefixes. Just the Chinese characters.
+        6. **Avoid Repetition**: Ensure the theme is distinct and creative.`;
 
         const completion = await client.chat.completions.create({
             messages: [{ role: "user", content: prompt }],
             model: modelName,
-            temperature: 0.7,
-            frequency_penalty: 0.6,
-            max_tokens: 50
+            temperature: 0.95, // High creativity
+            frequency_penalty: 0.8,
+            max_tokens: 60
         });
 
         let theme = completion.choices[0].message.content.trim();

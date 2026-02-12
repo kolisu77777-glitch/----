@@ -236,6 +236,20 @@ const MainGame = ({ apiKey, baseUrl, model, onLogout }) => {
                             setEventsTriggered(prev => ({ ...prev, breakdown: true }));
                             const locationName = hiddenLocationData ? hiddenLocationData.name : "私人保险箱";
                             setExtraLocations(prev => [...prev, locationName]); // Add the new location
+
+                            // Inject clues associated with the hidden location
+                            if (hiddenLocationData && hiddenLocationData.clues) {
+                                const newClues = hiddenLocationData.clues.map(c => ({
+                                    ...c,
+                                    location: hiddenLocationData.name,
+                                    is_hidden: true
+                                }));
+                                setCaseData(prev => ({
+                                    ...prev,
+                                    clues: [...prev.clues, ...newClues]
+                                }));
+                            }
+
                             setModal({
                                 title: "紧急事态",
                                 content: `嫌疑人情绪失控，试图销毁证据！\n\n(已解锁新的搜查区域：【${locationName}】)`,
@@ -1023,13 +1037,13 @@ const MainGame = ({ apiKey, baseUrl, model, onLogout }) => {
     };
 
     return (
-        <div className={`min-h-screen p-0 font-mono relative ${isOverloaded ? 'glitch-mode' : ''}`}>
+        <div className={`min-h-screen p-0 font-mono relative ${caseData && !finalGrade && isOverloaded ? 'glitch-mode' : ''}`}>
             <MatrixRain />
             <VisualEffects
-                timeLeft={timeLeft}
-                stressLevel={userStress}
+                timeLeft={caseData && !finalGrade ? timeLeft : 5400}
+                stressLevel={caseData && !finalGrade ? userStress : 0}
                 isLocked={Boolean(currentSuspect && suspectsState[currentSuspect] && Date.now() < suspectsState[currentSuspect].lockedUntil)}
-                isOverloaded={isOverloaded}
+                isOverloaded={caseData && !finalGrade ? isOverloaded : false}
             />
             {modal && <Modal title={modal.title} type={modal.type} actions={modal.actions} onClose={() => setModal(null)}>{modal.content}</Modal>}
 

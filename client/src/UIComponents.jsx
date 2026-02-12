@@ -214,7 +214,7 @@ export const HackingMinigame = ({ onSuccess, onFailure, targetName }) => {
     const [gameState, setGameState] = useState('init'); // init, memorize, input, success, fail
     const [target, setTarget] = useState([]);
     const [input, setInput] = useState([]);
-    const [timeLeft, setTimeLeft] = useState(15000); // 15 seconds total
+    const [timeLeft, setTimeLeft] = useState(8000); // 8 seconds total
     const [message, setMessage] = useState('INITIALIZING...');
     const [morseTarget, setMorseTarget] = useState(''); // For morse mode
     const [morseInput, setMorseInput] = useState('');
@@ -271,7 +271,7 @@ export const HackingMinigame = ({ onSuccess, onFailure, targetName }) => {
             setMorseTarget(code);
             setMessage('DECODE THE SIGNAL');
             setGameState('input'); // Morse starts directly in input mode
-            setTimeLeft(30000); // More time for morse
+            setTimeLeft(16000); // More time for morse
         }
 
         if (newMode !== 'morse') {
@@ -373,8 +373,8 @@ export const HackingMinigame = ({ onSuccess, onFailure, targetName }) => {
                     {/* Timer Bar */}
                     <div className="w-full h-1 bg-gray-900 mb-6">
                         <div
-                            className={`h-full transition-all duration-100 ${timeLeft < 5000 ? 'bg-red-500' : 'bg-green-500'}`}
-                            style={{ width: `${(timeLeft / (mode === 'morse' ? 30000 : 15000)) * 100}%` }}
+                            className={`h-full transition-all duration-100 ${timeLeft < 3000 ? 'bg-red-500' : 'bg-green-500'}`}
+                            style={{ width: `${(timeLeft / (mode === 'morse' ? 16000 : 8000)) * 100}%` }}
                         />
                     </div>
 
