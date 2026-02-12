@@ -404,7 +404,7 @@ const MainGame = ({ apiKey, baseUrl, model, onLogout }) => {
                 setModal({ title: "积分不足", content: "开启新案件需要 10 积分。\n请等待明日配给或联系管理员。", type: 'danger' });
                 return;
             }
-            setPoints(p => p - 10);
+            // setPoints(p => p - 10); // Removed optimistic deduction
         }
 
         if (!theme) return setModal({ title: "提示", content: "请输入题材！" });
@@ -432,6 +432,14 @@ const MainGame = ({ apiKey, baseUrl, model, onLogout }) => {
             setProgress(100);
             setTimeout(() => {
                 setCaseData(data);
+                // Update points from server response
+                if (data.points !== undefined) {
+                    setPoints(data.points);
+                } else if (!isDev) {
+                    // Fallback: Deduct locally only on success if server didn't return points
+                    setPoints(p => p - 10);
+                }
+
                 const initialSuspectsState = {};
                 const personalities = ['急躁', '固执', '软弱', '冷静', '阴险'];
                 const baseFatigueMap = { '急躁': 20, '固执': 10, '软弱': 5, '冷静': 0, '阴险': 15 };

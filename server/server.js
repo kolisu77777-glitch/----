@@ -64,8 +64,9 @@ app.post('/generate', async (req, res) => {
             return res.status(403).json({ error: "积分不足。开启案件需要 10 积分。" });
         }
 
+        let newPoints = currentPoints;
         if (!isDev) {
-            UserStore.updatePoints(apiKey, -10);
+            newPoints = UserStore.updatePoints(apiKey, -10);
         }
 
         // 限制题材长度，防止刷分或注入过长 Prompt
@@ -232,6 +233,7 @@ ${JSON.stringify(englishJSON)}
         // The prompt now explicitly requests "MANDATORY ELECTRONIC EVIDENCE" with decrypted content.
 
         finalCaseData.startTime = Date.now();
+        finalCaseData.points = newPoints; // Return updated points
         res.json(finalCaseData);
 
     } catch (error) {
