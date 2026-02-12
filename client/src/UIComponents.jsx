@@ -87,7 +87,7 @@ export const FlashbackReveal = ({ truth, onComplete }) => {
         // Pre-process method string to ensure better line breaks for lists
         const formattedMethod = truth.method
             .replace(/(\d+[\.\)])/g, '\n$1') // Add newline before "1)" or "1."
-            .replace(/([：:])\s*/g, '$1\n')  // Add newline after colons
+            .replace(/([：:])(?!\d)\s*/g, '$1\n')  // Add newline after colons (except colons in time strings like 9:30)
             .replace(/([。])\s*/g, '$1\n');  // Add newline after periods
 
         const methodLines = formattedMethod
