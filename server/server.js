@@ -65,9 +65,7 @@ app.post('/generate', async (req, res) => {
         }
 
         let newPoints = currentPoints;
-        if (!isDev) {
-            newPoints = UserStore.updatePoints(apiKey, -10);
-        }
+        // Deduction moved to success block
 
         // 限制题材长度，防止刷分或注入过长 Prompt
         if (theme && theme.length > 200) {
@@ -232,20 +230,17 @@ ${JSON.stringify(englishJSON)}
         // STEP 3: Force Inject Electronic Clues (REMOVED: Now handled by Prompt for better context)
         // The prompt now explicitly requests "MANDATORY ELECTRONIC EVIDENCE" with decrypted content.
 
+        // Deduct points only after successful generation
+        if (!isDev) {
+            newPoints = UserStore.updatePoints(apiKey, -10);
+        }
+
         finalCaseData.startTime = Date.now();
         finalCaseData.points = newPoints; // Return updated points
         res.json(finalCaseData);
 
     } catch (error) {
         console.error('Error:', error);
-
-        // Refund points if generation failed and points were deducted
-        const apiKey = req.headers['x-api-key'];
-        const isDev = apiKey === 'sk-606bfbb79c9640d78aebabb7c5e596cf';
-        if (!isDev) {
-             const refundedPoints = UserStore.updatePoints(apiKey, 10);
-             console.log(`[Refund] Generation failed. Refunded 10 points. Current: ${refundedPoints}`);
-        }
 
         res.status(500).json({ error: error.message || 'Unknown error' });
     }
